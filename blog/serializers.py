@@ -1,9 +1,13 @@
 from rest_framework import serializers
 
+from .mixins import CaseInsensitiveUniqueMixin
 from .models import Category, Post
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(
+    CaseInsensitiveUniqueMixin,
+    serializers.ModelSerializer
+):
     """
     Serializer for blog category objects.
     """
@@ -12,7 +16,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'slug')
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostSerializer(CaseInsensitiveUniqueMixin, serializers.ModelSerializer):
     """
     Serializer for blog posts, including author and category info.
     """
@@ -27,9 +31,6 @@ class PostSerializer(serializers.ModelSerializer):
     )
     published_date = serializers.SerializerMethodField()
 
-    def get_published_date(self, obj):
-        return obj.created_at.date()
-
     class Meta:
         model = Post
         fields = (
@@ -43,3 +44,6 @@ class PostSerializer(serializers.ModelSerializer):
             'image_url',
             'published_date',
         )
+
+    def get_published_date(self, obj):
+        return obj.created_at.date()
