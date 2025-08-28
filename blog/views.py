@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import (
+    ListAPIView,
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView
 )
@@ -85,3 +86,29 @@ class CommentDetailAPIView(RetrieveUpdateDestroyAPIView):
         comment = get_object_or_404(queryset, id=comment_id, post=post_id)
         self.check_object_permissions(self.request, comment)
         return comment
+
+
+class CategoryPostsAPIView(ListAPIView):
+    """
+    API view to list all posts belonging to a specific category.
+    """
+    queryset = Post.objects.select_related('user', 'category')
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category_id = self.kwargs.get('category_id')
+        return queryset.filter(category=category_id)
+
+
+class UserPostsAPIView(ListAPIView):
+    """
+    API view to list all posts created by a specific user.
+    """
+    queryset = Post.objects.select_related('user', 'category')
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user_id = self.kwargs.get('user_id')
+        return queryset.filter(user=user_id)
