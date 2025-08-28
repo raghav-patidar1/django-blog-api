@@ -19,4 +19,14 @@ urlpatterns += [
         views.CommentDetailAPIView.as_view(),
         name='comment-detail'
     ),
+    path(
+        'categories/<int:category_id>/posts/',
+        views.CategoryPostsAPIView.as_view(),
+        name='category-posts'
+    ),
+    path(
+        'users/<int:user_id>/posts/',
+        views.UserPostsAPIView.as_view(),
+        name='user-posts'
+    )
 ]
