@@ -1,5 +1,9 @@
 from django.db.models import Q
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.exceptions import ValidationError
+from rest_framework.filters import OrderingFilter, SearchFilter
+
+from .filters import PostFilter
 
 
 class CaseInsensitiveUniqueMixin:
@@ -45,3 +49,18 @@ class CaseInsensitiveUniqueMixin:
                     }
                 )
         return data
+
+
+class PostFilterMixin:
+    """
+    Mixin for Post views providing filtering, search, and ordering.
+
+    Includes:
+    - Field-based filters from PostFilter.
+    - Search on title and content.
+    - Ordering by created_at and title.
+    """
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_class = PostFilter
+    search_fields = ['title', 'content']
+    ordering_fields = ['created_at', 'title']
