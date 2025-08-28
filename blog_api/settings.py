@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
+    'drf_spectacular',
 
     # Project apps
     'users',
@@ -143,4 +144,22 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
+}
+
+# DRF Spectacular settings
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Django Blog API',
+    'DESCRIPTION': (
+        'A RESTful API for user signup, account management, and secure login '
+        'with JWT authentication, as well as managing blog posts, categories, '
+        'and comments with role-based permissions, filtering support, and '
+        'pagination.'
+    ),
+    'CONTACT': {
+        'name': 'Raghav Patidar',
+        'url': 'https://github.com/raghav-patidar1/',
+    },
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }

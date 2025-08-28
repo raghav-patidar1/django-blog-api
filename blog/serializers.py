@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from .mixins import CaseInsensitiveUniqueMixin
@@ -45,6 +46,7 @@ class PostSerializer(CaseInsensitiveUniqueMixin, serializers.ModelSerializer):
             'published_date',
         )
 
+    @extend_schema_field(serializers.DateField())
     def get_published_date(self, obj):
         return obj.created_at.date()
 
@@ -56,6 +58,7 @@ class CommentSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.username', read_only=True)
     comment_date = serializers.SerializerMethodField()
 
+    @extend_schema_field(serializers.DateField())
     def get_comment_date(self, obj):
         return obj.created_at.date()
 
