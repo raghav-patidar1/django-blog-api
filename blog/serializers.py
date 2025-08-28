@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .mixins import CaseInsensitiveUniqueMixin
-from .models import Category, Post
+from .models import Category, Comment, Post
 
 
 class CategorySerializer(
@@ -47,3 +47,18 @@ class PostSerializer(CaseInsensitiveUniqueMixin, serializers.ModelSerializer):
 
     def get_published_date(self, obj):
         return obj.created_at.date()
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    """
+    Serializer for comments, including related user.
+    """
+    user = serializers.CharField(source='user.username', read_only=True)
+    comment_date = serializers.SerializerMethodField()
+
+    def get_comment_date(self, obj):
+        return obj.created_at.date()
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'user', 'comment_text', 'comment_date')
