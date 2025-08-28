@@ -9,6 +9,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from .mixins import PostFilterMixin
 from .models import Category, Comment, Post
+from .pagination import CommentPagination, PostPagination
 from .permissions import (
     IsAdminOrReadOnly,
     IsOwnerOrAdminDeleteOnly,
@@ -37,6 +38,7 @@ class PostViewSet(PostFilterMixin, ModelViewSet):
     queryset = Post.objects.select_related('user', 'category')
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrAdminDeleteOnly]
+    pagination_class = PostPagination
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -52,6 +54,7 @@ class CommentListCreateAPIView(ListCreateAPIView):
     queryset = Comment.objects.select_related('user')
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    pagination_class = CommentPagination
 
     def get_queryset(self):
         """
@@ -95,6 +98,7 @@ class CategoryPostsAPIView(PostFilterMixin, ListAPIView):
     """
     queryset = Post.objects.select_related('user', 'category')
     serializer_class = PostSerializer
+    pagination_class = PostPagination
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -108,6 +112,7 @@ class UserPostsAPIView(PostFilterMixin, ListAPIView):
     """
     queryset = Post.objects.select_related('user', 'category')
     serializer_class = PostSerializer
+    pagination_class = PostPagination
 
     def get_queryset(self):
         queryset = super().get_queryset()
