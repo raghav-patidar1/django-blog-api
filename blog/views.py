@@ -7,6 +7,7 @@ from rest_framework.generics import (
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 
+from .mixins import PostFilterMixin
 from .models import Category, Comment, Post
 from .permissions import (
     IsAdminOrReadOnly,
@@ -29,7 +30,7 @@ class CategoryViewSet(ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
 
-class PostViewSet(ModelViewSet):
+class PostViewSet(PostFilterMixin, ModelViewSet):
     """
     ViewSet for creating, listing, updating, and deleting blog posts.
     """
@@ -88,7 +89,7 @@ class CommentDetailAPIView(RetrieveUpdateDestroyAPIView):
         return comment
 
 
-class CategoryPostsAPIView(ListAPIView):
+class CategoryPostsAPIView(PostFilterMixin, ListAPIView):
     """
     API view to list all posts belonging to a specific category.
     """
@@ -101,7 +102,7 @@ class CategoryPostsAPIView(ListAPIView):
         return queryset.filter(category=category_id)
 
 
-class UserPostsAPIView(ListAPIView):
+class UserPostsAPIView(PostFilterMixin, ListAPIView):
     """
     API view to list all posts created by a specific user.
     """
