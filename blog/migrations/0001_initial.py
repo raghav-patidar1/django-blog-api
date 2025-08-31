@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                         primary_key=True,
                         serialize=False,
                         verbose_name='ID'
-                    )
+                        )
                 ),
                 ('title', models.CharField(max_length=50, unique=True)),
                 ('slug', models.SlugField(blank=True, null=True, unique=True)),
@@ -35,12 +35,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Post',
             fields=[
-                ('id', models.BigAutoField(
-                    auto_created=True,
-                    primary_key=True,
-                    serialize=False,
-                    verbose_name='ID'
-                )),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID'
+                    )
+                ),
                 ('title', models.CharField(max_length=200, unique=True)),
                 ('slug', models.SlugField(blank=True, null=True, unique=True)),
                 ('content', models.TextField()),
@@ -91,7 +94,8 @@ class Migration(migrations.Migration):
                     'post',
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        related_name='comments', to='blog.post'
+                        related_name='comments',
+                        to='blog.post'
                     )
                 ),
             ],
