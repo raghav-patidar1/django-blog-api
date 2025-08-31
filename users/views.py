@@ -1,14 +1,27 @@
-from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import get_user_model
+from rest_framework.generics import (
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView
+)
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 
 from .serializers import UserAccountSerializer
 
+User = get_user_model()
 
-class UserCreateAPIView(CreateAPIView):
+
+class UserCreateAPIView(ListCreateAPIView):
     """
-    API view to signup.
+    API view to signup and list users (admin only).
     """
+    queryset = User.objects.all()
     serializer_class = UserAccountSerializer
+
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [AllowAny()]
+        else:
+            return [IsAdminUser()]
 
 
 class UserMeAPIView(RetrieveUpdateDestroyAPIView):
